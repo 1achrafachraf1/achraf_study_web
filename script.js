@@ -238,7 +238,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("calcToggleBtn").onclick = () => document.getElementById("calcWidget").classList.toggle("hidden");
     document.getElementById("closeCalcBtn").onclick = () => document.getElementById("calcWidget").classList.add("hidden");
 
-    // Real Gemini AI Chat Integration
+    // Real Gemini AI Chat Integration (Updated for Header API Auth)
     document.getElementById("sendAiBtn").onclick = sendAiMessage;
     document.getElementById("aiInput").onkeypress = (e) => { if(e.key === 'Enter') sendAiMessage(); };
 
@@ -258,9 +258,12 @@ document.addEventListener("DOMContentLoaded", () => {
         box.scrollTop = box.scrollHeight;
 
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${CONFIG.GEMINI_API_KEY}`, {
+            const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-goog-api-key": CONFIG.GEMINI_API_KEY
+                },
                 body: JSON.stringify({
                     contents: [{
                         parts: [{ text: `أنت معلم ومساعد دراسي متخصص للطلاب. أجِب باختصار ووضوح وبطريقة مبسطة باللغة العربية على هذا السؤال: ${msg}` }]
@@ -269,11 +272,19 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             const data = await response.json();
-            const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "عذراً، لم أستطع إيجاد إجابة مناسبة.";
 
+            if (data.error) {
+                console.error("Gemini API Error:", data.error);
+                document.getElementById(loadingId).innerText = "خطأ فـ المفتاح: " + data.error.message;
+                return;
+            }
+
+            const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "عذراً، لم أستطع إيجاد إجابة مناسبة.";
             document.getElementById(loadingId).innerText = reply;
+
         } catch (error) {
-            document.getElementById(loadingId).innerText = "حدث خطأ أثناء الاتصال بالذكاء الاصطناعي. تأكد من إدخال GEMINI_API_KEY صحيح فـ config.js.";
+            console.error("Fetch Error:", error);
+            document.getElementById(loadingId).innerText = "حدث خطأ أثناء الاتصال بالذكاء الاصطناعي.";
         }
 
         box.scrollTop = box.scrollHeight;
