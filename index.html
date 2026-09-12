@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة أدوات التلميذ</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- الشريط العلوي -->
+    <header class="navbar">
+        <div class="logo">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>أدوات التلميذ</span>
+        </div>
+        <nav>
+            <button class="nav-btn active" onclick="switchTab('gpa')"><i class="fa-solid fa-calculator"></i> حساب المعدل</button>
+            <button class="nav-btn" onclick="switchTab('scientific')"><i class="fa-solid fa-square-root-variable"></i> حاسبة علمية</button>
+            <button class="nav-btn" onclick="switchTab('tasks')"><i class="fa-solid fa-list-check"></i> قائمة المهام</button>
+            <button class="nav-btn" onclick="switchTab('translate')"><i class="fa-solid fa-language"></i> المترجم</button>
+        </nav>
+    </header>
+
+    <main class="container">
+
+        <!-- 1. حاسبة المعدل -->
+        <section id="gpa" class="tab-content active">
+            <h2><i class="fa-solid fa-calculator"></i> حساب معدل الأولى بكالوريا</h2>
+            <div class="card">
+                <div class="input-group">
+                    <label>الامتحان الجهوي (50%):</label>
+                    <input type="number" id="regional" min="0" max="20" step="0.01" placeholder="أدخل نقطة الجهوي">
+                </div>
+                <div class="input-group">
+                    <label>المراقبة المستمرة - الأسدس 1 (25%):</label>
+
+                    <input type="number" id="s1" min="0" max="20" step="0.01" placeholder="أدخل نقطة D1">
+                </div>
+                <div class="input-group">
+                    <label>المراقبة المستمرة - الأسدس 2 (25%):</label>
+                    <input type="number" id="s2" min="0" max="20" step="0.01" placeholder="أدخل نقطة D2">
+                </div>
+                <button class="btn-primary" onclick="calculateGPA()">حساب المعدل العام</button>
+                <div id="gpa-result" class="result-box"></div>
+            </div>
+        </section>
+
+        <!-- 2. الحاسبة العلمية -->
+        <section id="scientific" class="tab-content">
+            <h2><i class="fa-solid fa-square-root-variable"></i> الحاسبة العلمية</h2>
+            <div class="card calc-container">
+                <input type="text" id="calc-display" readonly placeholder="0">
+                <div class="calc-buttons">
+                    <button onclick="calcClear()" class="btn-danger">C</button>
+
+                    <button onclick="calcBack()">⌫</button>
+                    <button onclick="calcAppend('(')">(</button>
+                    <button onclick="calcAppend(')')">)</button>
+
+                    <button onclick="calcMath('sin')">sin</button>
+                    <button onclick="calcMath('cos')">cos</button>
+                    <button onclick="calcMath('tan')">tan</button>
+                    <button onclick="calcAppend('/')">÷</button>
+
+                    <button onclick="calcAppend('7')">7</button>
+                    <button onclick="calcAppend('8')">8</button>
+                    <button onclick="calcAppend('9')">9</button>
+                    <button onclick="calcAppend('*')">×</button>
+
+                    <button onclick="calcAppend('4')">4</button>
+                    <button onclick="calcAppend('5')">5</button>
+                    <button onclick="calcAppend('6')">6</button>
+
+                    <button onclick="calcAppend('-')">-</button>
+
+                    <button onclick="calcAppend('1')">1</button>
+
+                    <button onclick="calcAppend('2')">2</button>
+                    <button onclick="calcAppend('3')">3</button>
+                    <button onclick="calcAppend('+')">+</button>
+
+                    <button onclick="calcAppend('0')">0</button>
+                    <button onclick="calcAppend('.')">.</button>
+                    <button onclick="calcMath('sqrt')">√</button>
+
+                    <button onclick="calcEquals()" class="btn-success">=</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. قائمة المهام والدروس -->
+        <section id="tasks" class="tab-content">
+            <h2><i class="fa-solid fa-list-check"></i> تنظيم المراجعة والمهام</h2>
+            <div class="card">
+                <div class="task-input">
+                    <input type="text" id="task-text" placeholder="أضف درساً للمراجعة أو مهمة جديدة...">
+                    <button class="btn-primary" onclick="addTask()">إضافة</button>
+                </div>
+                <ul id="task-list" class="task-list"></ul>
+            </div>
+        </section>
+
+        <!-- 4. المترجم البسيط -->
+        <section id="translate" class="tab-content">
+            <h2><i class="fa-solid fa-language"></i> مترجم المصطلحات العلمية</h2>
+            <div class="card">
+                <input type="text" id="trans-input" placeholder="اكتب الكلمة (عربية أو فرنسية)..." oninput="translateText()">
+                <div id="trans-result" class="result-box">النتيجة ستظهر هنا...</div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- سكربتات Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+    <!-- ملفات التهيئة والمنطق -->
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
